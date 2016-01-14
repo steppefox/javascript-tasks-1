@@ -56,7 +56,6 @@ function timeToRoman(number) {
       break;
     }
   }
-  console.log(ret);
   return ret;
 }
 
