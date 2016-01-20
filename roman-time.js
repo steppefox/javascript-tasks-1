@@ -37,29 +37,32 @@ function timeToRoman(number) {
     I: 1
   };
 
-
   var ret = '';
-  while (true) {
-    for (var i in romanNumbers) {
-      var nm = romanNumbers[i];
-      if (number >= nm) {
-        var ost = parseInt(number / nm);
-        for (var k = 0; k < ost; k++) {
-          ret += i;
+  if (number > 0) {
+    while (true) {
+      for (var i in romanNumbers) {
+        var nm = romanNumbers[i];
+        if (number >= nm) {
+          var ost = parseInt(number / nm);
+          for (var k = 0; k < ost; k++) {
+            ret += i;
+          }
+          number = number % nm;
+          break;
         }
-        number = number % nm;
+      }
+
+      if (number == 0) {
         break;
       }
     }
-
-    if (number == 0) {
-      break;
-    }
+  } else {
+    ret = 'N';
   }
   return ret;
 }
 
-function printAscii(number) {
+function printAscii(romanTime) {
   var matrix = {
     I: [
       [0,1,1,1,0],
@@ -124,6 +127,15 @@ function printAscii(number) {
       [1,0,0,0,0,0,1],
       [1,0,0,0,0,0,1]
     ],
+    N: [
+      [1,0,0,0,0,0,1],
+      [1,1,0,0,0,0,1],
+      [1,0,1,0,0,0,1],
+      [1,0,0,1,0,0,1],
+      [1,0,0,0,1,0,1],
+      [1,0,0,0,0,1,1],
+      [1,0,0,0,0,0,1]
+    ],
     ':': [
       [0,0,0],
       [0,1,0],
@@ -135,19 +147,31 @@ function printAscii(number) {
     ]
   };
 
-  number = String(number);
+  romanTime = String(romanTime);
   var ret = [];
-  for (var inc = 0; inc < 7; inc++) {
+  var maxRows;
+  for (var i in matrix) {
+    if (typeof maxRows === 'undefined' || matrix[i].length > maxRows) {
+      maxRows = matrix[i].length;
+    }
+  }
+
+  for (var inc = 0; inc < maxRows; inc++) {
     var st = '';
-    for (var i in number) {
-      if (typeof matrix[number[i]] !== 'undefined') {
-        var letterMatrix = matrix[number[i]][inc];
+    for (var i in romanTime) {
+      if (typeof matrix[romanTime[i]] !== 'undefined') {
+        var letterMatrix = matrix[romanTime[i]][inc];
+        // Если матрица буквы меньше по высоте чем максимальное кол-во строк во всём выводе
+        if (typeof letterMatrix === 'undefined') {
+          letterMatrix = new Array(matrix[romanTime[i]][0].length+1).join('0').split('');
+        }
+
         for (var j in letterMatrix) {
           var nm = letterMatrix[j];
-          if (nm == 0) {
-            st += ' '; // Пустота в символе
-          } else {
+          if (nm == 1) {
             st += '*'; // Черточка или другой знак
+          } else {
+            st += ' '; // Пустота в символе
           }
         }
       }
