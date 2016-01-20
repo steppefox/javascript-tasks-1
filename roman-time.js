@@ -163,7 +163,7 @@ function printAscii(romanTime) {
         var letterMatrix = matrix[romanTime[i]][inc];
         // Если матрица буквы меньше по высоте чем максимальное кол-во строк во всём выводе
         if (typeof letterMatrix === 'undefined') {
-          letterMatrix = new Array(matrix[romanTime[i]][0].length+1).join('0').split('');
+          letterMatrix = new Array(matrix[romanTime[i]][0].length + 1).join('0').split('');
         }
 
         for (var j in letterMatrix) {
